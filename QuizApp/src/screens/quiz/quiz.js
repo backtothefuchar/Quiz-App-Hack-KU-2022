@@ -17,13 +17,16 @@ const Quiz = () => {
     const [ques, setQues] = useState(0);
     const [options, setOptions] = useState([]);
     const [score, setScore] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     const getQuiz = async () => {
+        setIsLoading(true);
         const url = "https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986";
         const response = await fetch(url);
         const data = await response.json();
         setQuestions(data.results);
         setOptions(generateOptionsAndShuffle(data.results[0]));
+        setIsLoading(false);
     };
 
     const generateOptionsAndShuffle = (_question) => {
@@ -44,7 +47,7 @@ const Quiz = () => {
     };
 
     const handleResults = () => {
-        navigation.navigate("Results", {score: score});
+        navigation.navigate("Result", {score: score});
     };
 
     const handleSelect = (_option) => {
@@ -55,12 +58,15 @@ const Quiz = () => {
         if (ques !== 9) {
             handleNext();
         }
+        else {
+            handleResults();
+        }
     };
 
     return (
         <View style={styles.container}>
 
-        {questions && (   
+        { isLoading ? <View><Text style={styles.loading}>Loading...</Text></View> : questions && (   
             <View>
 
             <View style={styles.questionContainer}>
@@ -120,6 +126,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#111d52',
+    },
+    loading: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        textAlign: 'center',
+        marginTop: '50%',
     },
     text: {
         marginTop: 60,

@@ -4,13 +4,17 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import CustomButton from "../../components/button";
 import { useNavigation } from "@react-navigation/native";
 
-const Result = () => {
-    const navigation = useNavigation();
+const Result = ({route}) => {
+    const {score} = route.params
+    const navigation = useNavigation()
+
+    const imageInQuestion = (score*10) > 40 ? require("../../../assets/images/shakepink.png") : require("../../../assets/images/sadman.png")
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Result</Text>
+            <Text style={styles.text}>Your score: {score*10}</Text>
             <View style={styles.imageContainer}>
-                <Image source={require("../../../assets/images/shakepink.png")} style={styles.image} />
+                <Image source={imageInQuestion} style={styles.image} />
                 {/*Image attribute: https://storyset.com/people*/}
             </View>
             <View style={styles.buttonContainer}>
