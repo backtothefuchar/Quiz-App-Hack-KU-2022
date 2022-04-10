@@ -2,8 +2,10 @@ import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import PageHeader from "../../components/header";
 import CustomButton from "../../components/button";
+import { useNavigation } from "@react-navigation/native";
 
 const Home = () => {
+    const navigation = useNavigation();
     return (
         <View style={styles.container}>
             <PageHeader />
@@ -12,7 +14,9 @@ const Home = () => {
                 {/*Image attribute: https://storyset.com/technology">Technology illustrations by Storyset*/}
             </View>
             <View style={styles.buttonContainer}>
-                <CustomButton text="Start Quiz" />
+                <TouchableOpacity style={styles.custombutton} onPress={() => navigation.navigate("Quiz")}>
+                    <Text style={styles.textButton}>Play Quiz</Text>
+                </TouchableOpacity>
             </View>
         </View>
     );
@@ -37,7 +41,19 @@ const styles = StyleSheet.create({
         marginHorizontal: 20,
         marginTop:180,
     },
-    text: {
+    textButton: {
+        color: "white",
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginVertical: 6,
+    },
+    custombutton: {
+        backgroundColor: "#DB5EAD",
+        borderRadius: 10,
+        height: 50,
+        margin: 10,
+        padding: 5,
     },
 });
 

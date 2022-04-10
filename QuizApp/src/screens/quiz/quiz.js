@@ -1,8 +1,11 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import CustomButton from "../../components/button";
+import { useNavigation } from "@react-navigation/native";
 
 const Quiz = () => {
+    const navigation = useNavigation();
+    
     return (
         <View style={styles.container}>
 
@@ -32,6 +35,10 @@ const Quiz = () => {
                     <Text style={styles.textButton}>Next</Text>
                 </TouchableOpacity>
 
+                <TouchableOpacity style={styles.button} onPress={() => navigation.navigate("Result")}>
+                    <Text style={styles.textButton}>End</Text>
+                </TouchableOpacity>
+
             </View>
         </View>
     );
@@ -40,6 +47,7 @@ const Quiz = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#111d52',
     },
     text: {
         marginTop: 30,

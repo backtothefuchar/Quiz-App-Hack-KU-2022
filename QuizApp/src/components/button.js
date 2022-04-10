@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
-const CustomButton = ({text}) => {
+const CustomButton = ({text,}) => {
     return (
         <View style={styles.container}>
             <TouchableOpacity style={styles.button}>
@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         textAlign: "center",
         marginVertical: 6,
+        marginHorizontal: 20,
     },
 });
 
