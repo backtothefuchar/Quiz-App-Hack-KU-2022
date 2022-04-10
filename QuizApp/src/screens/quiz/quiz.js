@@ -3,18 +3,35 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import CustomButton from "../../components/button";
 import { useNavigation } from "@react-navigation/native";
 
+const shuffleArray=(array)=>{
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
 
 const Quiz = () => {
     const navigation = useNavigation();
     
     const [questions, setQuestions] = useState();
     const [ques, setQues] = useState(0);
+    const [options, setOptions] = useState([]);
+    const [score, setScore] = useState(0);
 
     const getQuiz = async () => {
         const url = "https://opentdb.com/api.php?amount=10&type=multiple&encode=url3986";
         const response = await fetch(url);
         const data = await response.json();
         setQuestions(data.results);
+        setOptions(generateOptionsAndShuffle(data.results[0]));
+    };
+
+    const generateOptionsAndShuffle = (_question) => {
+        const options = [..._question.incorrect_answers];
+        options.push(_question.correct_answer);
+        shuffleArray(options);
+
+        return options;
     };
 
     useEffect(() => {
@@ -23,6 +40,21 @@ const Quiz = () => {
 
     const handleNext = () => {
         setQues(ques + 1);
+        setOptions(generateOptionsAndShuffle(questions[ques+1]));
+    };
+
+    const handleResults = () => {
+        navigation.navigate("Results", {score: score});
+    };
+
+    const handleSelect = (_option) => {
+        if (_option === questions[ques].correct_answer) {
+            setScore(score + 1);
+        }
+        
+        if (ques !== 9) {
+            handleNext();
+        }
     };
 
     return (
@@ -37,27 +69,37 @@ const Quiz = () => {
 
             <View style={styles.answerContainer}>
 
-                <CustomButton style={styles.text} text={decodeURIComponent(questions[ques].question)} />
+                <TouchableOpacity style={styles.custombutton} onPress={() => handleSelect(options[0])}>
+                    <Text style={styles.texty}>{decodeURIComponent(options[0])}</Text>
+                </TouchableOpacity>
 
-                <CustomButton text="Answer 2" />
+                <TouchableOpacity style={styles.custombutton} onPress={() => handleSelect(options[1])}>
+                    <Text style={styles.texty}>{decodeURIComponent(options[1])}</Text>
+                </TouchableOpacity>
 
-                <CustomButton text="Answer 3" />
+                <TouchableOpacity style={styles.custombutton} onPress={() => handleSelect(options[2])}>
+                    <Text style={styles.texty}>{decodeURIComponent(options[2])}</Text>
+                </TouchableOpacity>
 
-                <CustomButton text="Answer 4" />
+                <TouchableOpacity style={styles.custombutton} onPress={() => handleSelect(options[3])}>
+                    <Text style={styles.texty}>{decodeURIComponent(options[3])}</Text>
+                </TouchableOpacity>
 
             </View>
 
             <View style={styles.bottomContainer}>
 
+                {/*}
                 <TouchableOpacity style={styles.button}>
                     <Text style={styles.textButton}>Skip</Text>
                 </TouchableOpacity>
+                */}
 
                 {ques!==9 && <TouchableOpacity style={styles.button} onPress={handleNext}>
-                    <Text style={styles.textButton}>Next</Text>
+                    <Text style={styles.textButton}>Skip</Text>
                 </TouchableOpacity>}
 
-                {ques===9 && <TouchableOpacity style={styles.button} onPress={()=>null}>
+                {ques===9 && <TouchableOpacity style={styles.button} onPress={handleResults}>
                     <Text style={styles.textButton}>Results</Text>
                 </TouchableOpacity>}
 
@@ -111,6 +153,21 @@ const styles = StyleSheet.create({
         color: "white",
         textAlign: "center",
         fontSize: 20,
+    },
+    custombutton: {
+        backgroundColor: "#DB5EAD",
+        borderRadius: 10,
+        height: 50,
+        margin: 10,
+        padding: 5,
+    },
+    texty: {
+        color: "white",
+        fontSize: 20,
+        fontWeight: "bold",
+        textAlign: "center",
+        marginVertical: 6,
+        marginHorizontal: 20,
     },
 });
 
